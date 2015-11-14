@@ -22,20 +22,21 @@ DriveBot::DriveBot() {
 
 // Called just before this Command runs the first time
 void DriveBot::Initialize() {
-	
 }
-
+double DriveBot::deadband(double Value, double cutoff){
+	return Value > cutoff ? Value : 0;
+}
 // Called repeatedly when this Command is scheduled to run
 void DriveBot::Execute() {
 	Joystick* stick = Robot::oi->getGamePad();
 	
 	if(Robot::mover->speedSwitch->Get()){
 
-			Robot::mover->rightMotor0->Set(stick->GetThrottle()*-0.75);
-			Robot::mover->rightMotor1->Set(stick->GetThrottle()*-0.75);
+			Robot::mover->rightMotor0->Set(deadband(stick->GetThrottle()*-0.75,.01));
+			Robot::mover->rightMotor1->Set(deadband(stick->GetThrottle()*-0.75,.01));
 
-			Robot::mover->leftMotor2->Set(stick->GetY()*0.75);
-			Robot::mover->leftMotor3->Set(stick->GetY()*0.75);
+			Robot::mover->leftMotor2->Set(deadband(stick->GetY()*0.75,.01));
+			Robot::mover->leftMotor3->Set(deadband(stick->GetY()*0.75,.01));
 	}else{
 			Robot::mover->rightMotor0->Set(stick->GetThrottle()*-0.25);
 			Robot::mover->rightMotor1->Set(stick->GetThrottle()*-0.25);
